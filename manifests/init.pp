@@ -700,6 +700,15 @@ class datadog_agent(
       notify  => Service[$datadog_agent::params::service_name],
       require => File['/etc/datadog-agent'],
     }
+
+    if ($extra_template != '') {
+      concat::fragment{ 'datadog extra_template footer':
+        target  => '/etc/datadog-agent/datadog.yaml',
+        content => template($extra_template),
+        order   => '01',
+        require => File['/etc/datadog-agent/datadog.yaml'],
+      }
+    }
   }
 
 
